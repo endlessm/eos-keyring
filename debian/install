@@ -1,3 +1,2 @@
 eos-keyring.gpg etc/apt/trusted.gpg.d
-gpg.conf usr/share/ostree/trusted.gpg.d
 eos-keyring.gpg usr/share/ostree/trusted.gpg.d
