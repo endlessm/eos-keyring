@@ -1,3 +1,9 @@
+eos-keyring (2.0+2014.05.15) eos; urgency=low
+
+  * Added a new signing key for OSTree and apt (EOSK1)
+
+ -- Srdjan Grubor <sgnn7@sgnn7.org>  Thu, 15 May 2014 13:08:33 -0500
+
 eos-keyring (0.1) eos; urgency=low
 
   * Initial release
