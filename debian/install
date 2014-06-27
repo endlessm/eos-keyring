@@ -1,2 +1,3 @@
 eos-keyring.gpg etc/apt/trusted.gpg.d
 eos-keyring.gpg usr/share/ostree/trusted.gpg.d
+eos-keyring.gpg usr/share/eos-app-manager
