@@ -44,3 +44,17 @@ CLEANFILES = $(ALL_KEYRINGS)
 clean-local:
 	rm -f *.gpg~
 	rm -rf gnupg
+
+check-local: $(ALL_KEYRINGS)
+	rm -rf gnupg
+	$(MKDIR_P) -m700 gnupg
+	keyrings='$^'; \
+	for keyring in $$keyrings; do \
+	  $(GPG) --homedir gnupg --import $$keyring || exit 1; \
+	done
+	fingerprints=`$(GPG) --homedir gnupg --list-keys --with-colons \
+	  --with-fingerprint | grep fpr | awk -F ':' '{print $$10}'`; \
+	for fpr in $$fingerprints; do \
+	  echo "$$fpr:6:" | $(GPG) --homedir gnupg --import-ownertrust; \
+	done
+	$(GPG) --homedir gnupg --check-trustdb
