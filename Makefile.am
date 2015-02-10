@@ -33,10 +33,14 @@ ostree_keyringdir = $(datadir)/ostree/trusted.gpg.d
 ostree_keyring_DATA = $(OSTREE_KEYRING)
 
 $(ALL_KEYRINGS):
-	keys='$^'; for key in $$keys; do \
-		$(GPG) --homedir . --no-default-keyring --keyring $@ --import $$key || exit 1; \
+	$(MKDIR_P) -m700 gnupg
+	keys='$^'; \
+	for key in $$keys; do \
+	  $(GPG) --homedir gnupg --no-default-keyring \
+	    --keyring $(builddir)/$@ --import $$key || exit 1; \
 	done
 
 CLEANFILES = $(ALL_KEYRINGS)
 clean-local:
-	rm -f *.gpg *.gpg~
+	rm -f *.gpg~
+	rm -rf gnupg
