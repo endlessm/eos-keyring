@@ -1,9 +1,14 @@
+ALL_KEYRINGS =
+ALL_KEYS =
+
 MASTER_KEYRING = eos-master-keyring.gpg
 MASTER_KEYS = \
 	keys/master/MK1.pub \
 	keys/master/MK2.pub \
 	$(NULL)
 $(MASTER_KEYRING): $(MASTER_KEYS)
+ALL_KEYRINGS += $(MASTER_KEYRING)
+ALL_KEYS += $(MASTER_KEYS)
 
 APPS_KEYRING = eos-apps-keyring.gpg
 APPS_COMPAT_KEYRING = eos-keyring.gpg
@@ -12,6 +17,8 @@ APPS_KEYS = \
 	keys/signing/EAPPSERVERSTAG1.pub \
 	$(NULL)
 $(APPS_KEYRING): $(APPS_KEYS)
+ALL_KEYRINGS += $(APPS_KEYRING)
+ALL_KEYS += $(APPS_KEYS)
 
 OSTREE_KEYRING = eos-ostree-keyring.gpg
 OSTREE_KEYS = \
@@ -19,16 +26,17 @@ OSTREE_KEYS = \
 	keys/signing/EOSK1.pub \
 	$(NULL)
 $(OSTREE_KEYRING): $(OSTREE_KEYS)
+ALL_KEYRINGS += $(OSTREE_KEYRING)
+ALL_KEYS += $(OSTREE_KEYS)
 
 IMAGE_KEYRING = eos-image-keyring.gpg
 IMAGE_KEYS = \
 	keys/signing/EIS1.pub \
 	$(NULL)
 $(IMAGE_KEYRING): $(IMAGE_KEYS)
+ALL_KEYRINGS += $(IMAGE_KEYRING)
+ALL_KEYS += $(IMAGE_KEYS)
 
-ALL_KEYRINGS = $(MASTER_KEYRING) $(APPS_KEYRING) $(OSTREE_KEYRING) \
-	$(IMAGE_KEYRING)
-ALL_KEYS = $(MASTER_KEYS) $(APPS_KEYS) $(OSTREE_KEYS) $(IMAGE_KEYS)
 EXTRA_DIST = $(ALL_KEYS)
 
 keyringdir = $(datadir)/keyrings
