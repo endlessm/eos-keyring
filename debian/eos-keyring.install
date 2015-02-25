@@ -1,0 +1,5 @@
+usr/share/ostree/trusted.gpg.d
+usr/share/eos-app-manager
+usr/share/keyrings/eos-master-keyring.gpg
+usr/share/keyrings/eos-ostree-keyring.gpg
+usr/share/keyrings/eos-apps-keyring.gpg

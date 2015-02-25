@@ -12,3 +12,11 @@ Recommends: gnupg
 Description: GnuPG keys for EOS
   This package contains signing keys for EOS including ostree updates, apt repos
   and any other deliverables
+
+Package: eos-dev-keyring
+Architecture: all
+Depends: gpgv, ${misc:Depends}
+Recommends: gnupg
+Description: GnuPG keys for EOS developrs
+  This package contains signing keys useful to EOS developers, including
+  the image signing keys.
