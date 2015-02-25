@@ -9,6 +9,9 @@ KEYS = \
 
 EXTRA_DIST = $(KEYS)
 
+keyringdir = $(datadir)/keyrings
+keyring_DATA = eos-keyring.gpg
+
 apt_keyringdir = $(sysconfdir)/apt/trusted.gpg.d
 apt_keyring_DATA = eos-keyring.gpg
 
