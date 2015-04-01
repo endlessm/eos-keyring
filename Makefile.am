@@ -37,6 +37,14 @@ $(IMAGE_KEYRING): $(IMAGE_KEYS)
 ALL_KEYRINGS += $(IMAGE_KEYRING)
 ALL_KEYS += $(IMAGE_KEYS)
 
+ARCHIVE_KEYRING = eos-archive-keyring.gpg
+ARCHIVE_KEYS = \
+	keys/signing/EASK1.pub \
+	$(NULL)
+$(ARCHIVE_KEYRING): $(ARCHIVE_KEYS)
+ALL_KEYRINGS += $(ARCHIVE_KEYRING)
+ALL_KEYS += $(ARCHIVE_KEYS)
+
 EXTRA_DIST = $(ALL_KEYS)
 
 keyringdir = $(datadir)/keyrings
@@ -47,6 +55,9 @@ apps_keyring_DATA = $(APPS_KEYRING)
 
 ostree_keyringdir = $(datadir)/ostree/trusted.gpg.d
 ostree_keyring_DATA = $(OSTREE_KEYRING)
+
+archive_keyringdir = $(sysconfdir)/apt/trusted.gpg.d
+archive_keyring_DATA = $(ARCHIVE_KEYRING)
 
 $(ALL_KEYRINGS):
 	$(MKDIR_P) -m700 gnupg
