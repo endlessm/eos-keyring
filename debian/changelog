@@ -1,3 +1,14 @@
+eos-keyring (2015.04.09-0) eos; urgency=medium
+
+  * eos-keyring.gpg split up into usage specific keyrings:
+    - eos-master-keyring.gpg
+    - eos-ostree-keyring.gpg
+    - eos-apps-keyring.gpg
+  * Add eos-archive-keyring.gpg (EASK1) to eos-keyring package.
+  * Add eos-image-keyring.gpg (EISK1) to new eos-dev-keyring package.
+
+ -- Dan Nicholson <nicholson@endlessm.com>  Thu, 09 Apr 2015 06:07:43 -0700
+
 eos-keyring (2.0+2014.05.15) eos; urgency=low
 
   * Added a new signing key for OSTree and apt (EOSK1)
