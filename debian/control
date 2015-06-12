@@ -1,11 +1,12 @@
 Source: eos-keyring
 Priority: extra
-Section: utils
+Section: misc
 Maintainer: Endless Maintainers <maintainers@endlessm.com>
 Build-Depends: debhelper (>= 8), gnupg
 Standards-Version: 3.9.3
 
 Package: eos-keyring
+Priority: important
 Architecture: all
 Depends: gpgv, ${misc:Depends}
 Recommends: gnupg
