@@ -45,6 +45,15 @@ $(ARCHIVE_KEYRING): $(ARCHIVE_KEYS)
 ALL_KEYRINGS += $(ARCHIVE_KEYRING)
 ALL_KEYS += $(ARCHIVE_KEYS)
 
+CODECS_KEYRING = eos-codecs-keyring.gpg
+CODECS_KEYS = \
+	keys/codecs/ECMK1.pub \
+	keys/codecs/ECAK1.pub \
+	$(NULL)
+$(CODECS_KEYRING): $(CODECS_KEYS)
+ALL_KEYRINGS += $(CODECS_KEYRING)
+ALL_KEYS += $(CODECS_KEYS)
+
 EXTRA_DIST = $(ALL_KEYS)
 
 keyringdir = $(datadir)/keyrings
