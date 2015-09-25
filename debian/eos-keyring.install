@@ -5,3 +5,4 @@ usr/share/keyrings/eos-master-keyring.gpg
 usr/share/keyrings/eos-ostree-keyring.gpg
 usr/share/keyrings/eos-apps-keyring.gpg
 usr/share/keyrings/eos-archive-keyring.gpg
+usr/share/keyrings/eos-codecs-keyring.gpg
