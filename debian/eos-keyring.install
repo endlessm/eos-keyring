@@ -3,6 +3,7 @@ usr/share/eos-app-manager
 usr/share/keyrings/eos-apps-keyring.gpg
 usr/share/keyrings/eos-archive-keyring.gpg
 usr/share/keyrings/eos-codecs-keyring.gpg
+usr/share/keyrings/eos-flatpak-keyring.gpg
 usr/share/keyrings/eos-master-keyring.gpg
 usr/share/keyrings/eos-ostree-keyring.gpg
 usr/share/ostree/trusted.gpg.d
