@@ -29,6 +29,14 @@ $(OSTREE_KEYRING): $(OSTREE_KEYS)
 ALL_KEYRINGS += $(OSTREE_KEYRING)
 ALL_KEYS += $(OSTREE_KEYS)
 
+FLATPAK_KEYRING = eos-flatpak-keyring.gpg
+FLATPAK_KEYS = \
+	keys/signing/EFSK1.pub \
+	$(NULL)
+$(FLATPAK_KEYRING): $(FLATPAK_KEYS)
+ALL_KEYRINGS += $(FLATPAK_KEYRING)
+ALL_KEYS += $(FLATPAK_KEYS)
+
 IMAGE_KEYRING = eos-image-keyring.gpg
 IMAGE_KEYS = \
 	keys/signing/EIS1.pub \
@@ -63,7 +71,7 @@ apps_keyringdir = $(datadir)/eos-app-manager
 apps_keyring_DATA = $(APPS_KEYRING)
 
 ostree_keyringdir = $(datadir)/ostree/trusted.gpg.d
-ostree_keyring_DATA = $(OSTREE_KEYRING)
+ostree_keyring_DATA = $(OSTREE_KEYRING) $(FLATPAK_KEYRING)
 
 archive_keyringdir = $(sysconfdir)/apt/trusted.gpg.d
 archive_keyring_DATA = $(ARCHIVE_KEYRING)
