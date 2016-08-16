@@ -57,6 +57,8 @@ CODECS_KEYRING = eos-codecs-keyring.gpg
 CODECS_KEYS = \
 	keys/codecs/ECMK1.pub \
 	keys/codecs/ECAK1.pub \
+	keys/codecs/ECOAK1.pub \
+	keys/codecs/ECUAK1.pub \
 	$(NULL)
 $(CODECS_KEYRING): $(CODECS_KEYS)
 ALL_KEYRINGS += $(CODECS_KEYRING)
