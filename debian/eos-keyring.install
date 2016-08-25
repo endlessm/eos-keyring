@@ -1,6 +1,4 @@
 etc/apt/trusted.gpg.d
-usr/share/eos-app-manager
-usr/share/keyrings/eos-apps-keyring.gpg
 usr/share/keyrings/eos-archive-keyring.gpg
 usr/share/keyrings/eos-codecs-keyring.gpg
 usr/share/keyrings/eos-flatpak-keyring.gpg
