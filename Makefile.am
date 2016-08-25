@@ -10,16 +10,6 @@ $(MASTER_KEYRING): $(MASTER_KEYS)
 ALL_KEYRINGS += $(MASTER_KEYRING)
 ALL_KEYS += $(MASTER_KEYS)
 
-APPS_KEYRING = eos-apps-keyring.gpg
-APPS_COMPAT_KEYRING = eos-keyring.gpg
-APPS_KEYS = \
-	keys/signing/EAPPSERVERPROD1.pub \
-	keys/signing/EAPPSERVERSTAG1.pub \
-	$(NULL)
-$(APPS_KEYRING): $(APPS_KEYS)
-ALL_KEYRINGS += $(APPS_KEYRING)
-ALL_KEYS += $(APPS_KEYS)
-
 OSTREE_KEYRING = eos-ostree-keyring.gpg
 OSTREE_KEYS = \
 	keys/signing/ECOLSK1.pub \
@@ -69,9 +59,6 @@ EXTRA_DIST = $(ALL_KEYS)
 keyringdir = $(datadir)/keyrings
 keyring_DATA = $(ALL_KEYRINGS)
 
-apps_keyringdir = $(datadir)/eos-app-manager
-apps_keyring_DATA = $(APPS_KEYRING)
-
 ostree_keyringdir = $(datadir)/ostree/trusted.gpg.d
 ostree_keyring_DATA = $(OSTREE_KEYRING) $(FLATPAK_KEYRING)
 
@@ -85,15 +72,6 @@ $(ALL_KEYRINGS):
 	  $(GPG) --homedir gnupg --no-default-keyring \
 	    --keyring $(builddir)/$@ --import $$key || exit 1; \
 	done
-
-# Provide a compatibility symlink for eos-app-manager since it has a
-# hardcoded keyring rather than a keyring directory.
-install-data-hook:
-	$(MKDIR_P) $(DESTDIR)$(apps_keyringdir)
-	$(LN_S) -f $(APPS_KEYRING) $(DESTDIR)$(apps_keyringdir)/$(APPS_COMPAT_KEYRING)
-
-uninstall-local:
-	rm -f $(DESTDIR)$(apps_keyringdir)/$(APPS_COMPAT_KEYRING)
 
 CLEANFILES = $(ALL_KEYRINGS)
 clean-local:
