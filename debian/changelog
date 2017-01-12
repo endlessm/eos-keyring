@@ -1,3 +1,9 @@
+eos-keyring (2017.01.12-0) eos; urgency=medium
+
+  * Added FNDE codecs decryption key (ECFAK1)
+
+ -- Srdjan Grubor <sgnn7@sgnn7.org>  Thu, 12 Jan 2017 16:09:22 -0600
+
 eos-keyring (2015.04.09-0) eos; urgency=medium
 
   * eos-keyring.gpg split up into usage specific keyrings:
