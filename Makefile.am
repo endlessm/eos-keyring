@@ -51,6 +51,7 @@ CODECS_KEYS = \
 	keys/codecs/ECUAK1.pub \
 	keys/codecs/ECFAK1.pub \
 	keys/codecs/ECHNDAK1.pub \
+	keys/codecs/ECSOLAK1.pub \
 	$(NULL)
 $(CODECS_KEYRING): $(CODECS_KEYS)
 ALL_KEYRINGS += $(CODECS_KEYRING)
