@@ -78,6 +78,11 @@ $(ALL_KEYRINGS):
 	$(GPG) --homedir gnupg --no-default-keyring \
 	  --keyring $(builddir)/$@.tmp --export > $(builddir)/$@
 
+# Endless CA certificate for internal services
+# https://phabricator.endlessm.com/w/sysadmin/ssl-ca/
+cacertsdir = $(datadir)/ca-certificates/endless
+dist_cacerts_DATA = keys/endless-ca.crt
+
 CLEANFILES = $(ALL_KEYRINGS)
 clean-local:
 	rm -f *.gpg~ *.gpg.tmp *.gpg.tmp~
