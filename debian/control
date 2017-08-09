@@ -24,3 +24,19 @@ Recommends: gnupg
 Description: GnuPG keys for EOS developrs
  This package contains the EOS image signing keys. It was previously
  named eos-dev-keyring.
+
+Package: endless-ca-cert
+Architecture: all
+# Newer dpkg required for activate-noawait support per deb-triggers(5)
+Pre-Depends: dpkg (>= 1.16.1)
+Depends: ${misc:Depends}, ca-certificates
+Enhances: ca-certificates
+Description: Endless CA root certificate
+ This package contains the root certificate for the Endless SSL
+ certificate authority (CA). This CA provides SSL certificates for
+ internal Endless services.
+ .
+ Installing this package will add it to the system's trusted certificate
+ authorities. You may need to run "dpkg-reconfigure ca-certificates" to
+ enable endless/endless-ca.crt if you've previously installed and
+ removed this package.
