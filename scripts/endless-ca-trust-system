@@ -1,0 +1,103 @@
+#!/bin/bash -e
+
+# endless-ca-trust-system - Trust Endless SSL CA certificate systemwide
+# Copyright (C) 2017  Endless Mobile, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+# Copy the Endless CA certificate to /usr/local/share/ca-certificats. It
+# will be added to the system CA certificates in /etc/ssl/certs after
+# running update-ca-certificates.
+
+CERT_SRC_PATH=/usr/share/eos-keyring/endless-ca.crt
+CERT_DST_PATH=/usr/local/share/ca-certificates/endless-ca.crt
+CERT_TRUST_PATH=/etc/ssl/certs/endless-ca.pem
+
+usage() {
+    cat <<EOF
+Usage: $0 [OPTION...]
+Trust Endless SSL CA certificate systemwide
+
+  -f, --force           overwrite existing certificate
+  -n, --dry-run         show what would be done
+  -h, --help            display this help and exit
+EOF
+}
+
+ARGS=$(getopt -n "$0" -o fnh -l force,dry-run,help -- "$@")
+eval set -- "$ARGS"
+
+FORCE=false
+DRY_RUN=false
+while true; do
+    case "$1" in
+        -f|--force)
+            FORCE=true
+            shift
+            ;;
+        -n|--dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --)
+            shift
+            break
+            ;;
+        *)
+            echo "Unrecognized option $1" >&2
+            usage >&2
+            exit 1
+            ;;
+    esac
+done
+
+if [ $EUID -ne 0 ]; then
+    echo "$0 must be run as root" >&2
+    exit 1
+fi
+
+if [ -f "$CERT_TRUST_PATH" ] && ! $FORCE; then
+    echo "$CERT_TRUST_PATH symlink already exists"
+    exit 0
+fi
+
+if [ ! -f "$CERT_SRC_PATH" ]; then
+    echo "Could not find Endless CA cert at $CERT_SRC_PATH" >&2
+    exit 1
+fi
+
+
+# Make a copy rather than a symlink in case the paths in /usr change or
+# are removed
+echo "Copying $CERT_SRC_PATH to $CERT_DST_PATH"
+if ! $DRY_RUN; then
+    CERT_DST_DIR=$(dirname "$CERT_DST_PATH")
+    mkdir -p "$CERT_DST_DIR"
+    cp "$CERT_SRC_PATH" "$CERT_DST_PATH"
+fi
+
+echo "Updating system certificates with update-ca-certificates"
+if ! $DRY_RUN; then
+    if $FORCE; then
+        # Call with --fresh so symlinks are rebuilt
+        update-ca-certificates --fresh
+    else
+        update-ca-certificates
+    fi
+fi

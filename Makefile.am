@@ -81,6 +81,9 @@ $(ALL_KEYRINGS):
 # Endless CA certificate for internal services
 # https://phabricator.endlessm.com/w/sysadmin/ssl-ca/
 dist_pkgdata_DATA = keys/endless-ca.crt
+dist_bin_SCRIPTS = \
+	scripts/endless-ca-trust-system \
+	$(NULL)
 
 # Symlink in system trusted CA certs directory
 cacertsdir = $(datadir)/ca-certificates/endless
