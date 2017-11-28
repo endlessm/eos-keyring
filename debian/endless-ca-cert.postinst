@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+
+CONF_FILE=/etc/ca-certificates.conf
+CONF_FILE_NEW="${CONF_FILE}.dpkg-new"
+CONF_FILE_OLD="${CONF_FILE}.dpkg-old"
+CA_CONF=endless/endless-ca.crt
+
+if [ "$1" = "configure" ]; then
+    # Add the CA cert to the configuration file if there's no existing
+    # declaration
+    if [ -f "$CONF_FILE" ]; then
+        if grep -q "^!\?${CA_CONF}$" "$CONF_FILE"; then
+            cp "$CONF_FILE" "$CONF_FILE_NEW"
+            echo "$CA_CONF" >> "$CONF_FILE_NEW"
+            mv -f "$CONF_FILE" "$CONF_FILE_OLD"
+            mv "$CONF_FILE_NEW" "$CONF_FILE"
+        fi
+    fi
+fi
+
+# Substitute debhelper actions
+#DEBHELPER#
+
+# Ensure successful exit per
+# https://www.debian.org/doc/debian-policy/#exit-status
+exit 0
