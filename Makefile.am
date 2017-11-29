@@ -85,6 +85,8 @@ dist_bin_SCRIPTS = \
 	scripts/endless-ca-trust-system \
 	scripts/endless-ca-trust-user \
 	$(NULL)
+profiledir = $(sysconfdir)/profile.d
+dist_profile_DATA = profile/endless-ca-trust-user.sh
 
 # Symlink in system trusted CA certs directory
 cacertsdir = $(datadir)/ca-certificates/endless
