@@ -33,7 +33,7 @@ Package: endless-ca-cert
 Architecture: all
 # Newer dpkg required for activate-noawait support per deb-triggers(5)
 Pre-Depends: dpkg (>= 1.16.1)
-Depends: ${misc:Depends}, ca-certificates
+Depends: ca-certificates, eos-keyring (= ${binary:Version}), ${misc:Depends}
 Enhances: ca-certificates
 Description: Endless CA root certificate
  This package contains the root certificate for the Endless SSL
@@ -43,4 +43,7 @@ Description: Endless CA root certificate
  Installing this package will add it to the system's trusted certificate
  authorities. You may need to run "dpkg-reconfigure ca-certificates" to
  enable endless/endless-ca.crt if you've previously installed and
- removed this package.
+ removed this package. You will also need to run endless-ca-trust-user
+ to add the certificate to the user's NSS database for chromium and
+ chrome. The /etc/profile.d/endless-ca-trust-user.sh profile script does
+ this automatically at login.
