@@ -1,4 +1,6 @@
 etc/apt/trusted.gpg.d
+usr/bin/endless-ca-trust-system
+usr/bin/endless-ca-trust-user
 usr/share/eos-keyring/endless-ca.crt
 usr/share/keyrings/eos-archive-keyring.gpg
 usr/share/keyrings/eos-codecs-keyring.gpg

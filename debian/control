@@ -8,11 +8,15 @@ Standards-Version: 3.9.3
 Package: eos-keyring
 Priority: important
 Architecture: all
-Depends: gpgv, ${misc:Depends}
+Depends: ca-certificates, gpgv, libnss3-tools, openssl, ${misc:Depends}
 Recommends: gnupg
 Description: GnuPG keys for EOS
-  This package contains signing keys for EOS including ostree updates, apt repos
-  and any other deliverables
+ This package contains signing keys for EOS including ostree updates,
+ apt repos and any other deliverables.
+ .
+ A copy of the Endless SSL CA certificate is included. The
+ endless-ca-trust-system and endless-ca-trust-user scripts can be used
+ for manually trusting it at the system and user levels.
 
 Package: eos-image-keyring
 Provides: eos-dev-keyring
