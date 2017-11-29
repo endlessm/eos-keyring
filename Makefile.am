@@ -83,6 +83,7 @@ $(ALL_KEYRINGS):
 dist_pkgdata_DATA = keys/endless-ca.crt
 dist_bin_SCRIPTS = \
 	scripts/endless-ca-trust-system \
+	scripts/endless-ca-trust-user \
 	$(NULL)
 
 # Symlink in system trusted CA certs directory

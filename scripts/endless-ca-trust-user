@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# endless-ca-trust-system - Trust Endless SSL CA certificate systemwide
+# endless-ca-trust-user - Trust Endless SSL CA certificate for user
 # Copyright (C) 2017  Endless Mobile, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -17,20 +17,22 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-# Copy the Endless CA certificate to /usr/local/share/ca-certificats. It
-# will be added to the system CA certificates in /etc/ssl/certs after
-# running update-ca-certificates.
+# Add the installed Endless CA certificate to the user's NSS database.
+# This is needed for chromium and chrome, which supply a builtin CA
+# store with user customizations in ~/.pki/nssdb. See
+# https://chromium.googlesource.com/chromium/src/+/lkcr/docs/linux_cert_management.md
+# for details.
 
-CERT_SRC_PATH=/usr/share/eos-keyring/endless-ca.crt
-CERT_DST_PATH=/usr/local/share/ca-certificates/endless-ca.crt
-CERT_TRUST_PATH=/etc/ssl/certs/endless-ca.pem
+NSSDB="$HOME/.pki/nssdb"
+CERT_PATH=/usr/share/eos-keyring/endless-ca.crt
+CA_NAME="Endless CA"
 
 usage() {
     cat <<EOF
 Usage: $0 [OPTION...]
-Trust Endless SSL CA certificate systemwide
+Trust Endless SSL CA certificate in user's NSS database
 
-  -f, --force           overwrite existing certificate
+  -f, --force           force import of certificate
   -n, --dry-run         show what would be done
   -h, --help            display this help and exit
 EOF
@@ -67,42 +69,42 @@ while true; do
     esac
 done
 
-if [ $EUID -ne 0 ]; then
-    echo "$0 must be run as root" >&2
+# Make sure certutil is installed
+if ! type -p certutil >/dev/null; then
+    echo "certutil is not installed" >&2
     exit 1
 fi
 
-if [ -f "$CERT_TRUST_PATH" ] && ! $FORCE; then
-    echo "$CERT_TRUST_PATH symlink already exists"
-    exit 0
-fi
-
-if [ ! -f "$CERT_SRC_PATH" ]; then
-    echo "Could not find Endless CA cert at $CERT_SRC_PATH" >&2
-    exit 1
-fi
-
-
-# Make a copy rather than a symlink in case the paths in /usr change or
-# are removed
-echo "Copying $CERT_SRC_PATH to $CERT_DST_PATH"
-if ! $DRY_RUN; then
-    CERT_DST_DIR=$(dirname "$CERT_DST_PATH")
-    mkdir -p "$CERT_DST_DIR"
-    cp "$CERT_SRC_PATH" "$CERT_DST_PATH"
-fi
-
-echo "Updating system certificates with update-ca-certificates"
-if ! $DRY_RUN; then
-    if $FORCE; then
-        # Call with --fresh so symlinks are rebuilt
-        update-ca-certificates --fresh
-    else
-        update-ca-certificates
+if [ ! -d "$NSSDB" ]; then
+    # Create it unless this is a dry run in which case nothing else can
+    # be done
+    if $DRY_RUN; then
+        echo "No NSS database found at $NSSDB, cannot continue dry run"
+        exit 1
     fi
 
-    # Let the caller know to update their NSS database so
-    # chromium/chrome also trust the certificate
-    echo "Run endless-ca-trust-user for chromium and chrome to trust" \
-         "$CERT_PATH"
+    echo "Creating $NSSDB"
+    mkdir -p -m700 "$NSSDB"
+    certutil -d "sql:$NSSDB" -N --empty-password
+fi
+
+# Check if the certificate is already added
+if certutil -d "sql:$NSSDB" -L -n "$CA_NAME" 2>/dev/null | \
+        grep -q 'Trusted CA'
+then
+    if ! $FORCE; then
+        echo "$CA_NAME certificate already trusted"
+        exit 0
+    fi
+fi
+
+if [ ! -f "$CERT_PATH" ]; then
+    echo "Could not find Endless CA cert at $CERT_PATH" >&2
+    exit 1
+fi
+
+# Add it as a trusted CA
+echo "Adding $CA_NAME certificate $CERT_PATH"
+if ! $DRY_RUN; then
+    certutil -d "sql:$NSSDB" -A -t "C,," -n "$CA_NAME" -i "$CERT_PATH"
 fi
