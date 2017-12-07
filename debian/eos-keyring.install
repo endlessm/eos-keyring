@@ -1,4 +1,5 @@
 etc/apt/trusted.gpg.d
+usr/share/eos-keyring/endless-ca.crt
 usr/share/keyrings/eos-archive-keyring.gpg
 usr/share/keyrings/eos-codecs-keyring.gpg
 usr/share/keyrings/eos-flatpak-keyring.gpg
