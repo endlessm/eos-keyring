@@ -8,11 +8,15 @@ Standards-Version: 3.9.3
 Package: eos-keyring
 Priority: important
 Architecture: all
-Depends: gpgv, ${misc:Depends}
+Depends: ca-certificates, gpgv, libnss3-tools, openssl, ${misc:Depends}
 Recommends: gnupg
 Description: GnuPG keys for EOS
-  This package contains signing keys for EOS including ostree updates, apt repos
-  and any other deliverables
+ This package contains signing keys for EOS including ostree updates,
+ apt repos and any other deliverables.
+ .
+ A copy of the Endless SSL CA certificate is included. The
+ endless-ca-trust-system and endless-ca-trust-user scripts can be used
+ for manually trusting it at the system and user levels.
 
 Package: eos-image-keyring
 Provides: eos-dev-keyring
@@ -29,7 +33,7 @@ Package: endless-ca-cert
 Architecture: all
 # Newer dpkg required for activate-noawait support per deb-triggers(5)
 Pre-Depends: dpkg (>= 1.16.1)
-Depends: ${misc:Depends}, ca-certificates
+Depends: ca-certificates, eos-keyring (= ${binary:Version}), ${misc:Depends}
 Enhances: ca-certificates
 Description: Endless CA root certificate
  This package contains the root certificate for the Endless SSL
@@ -39,4 +43,7 @@ Description: Endless CA root certificate
  Installing this package will add it to the system's trusted certificate
  authorities. You may need to run "dpkg-reconfigure ca-certificates" to
  enable endless/endless-ca.crt if you've previously installed and
- removed this package.
+ removed this package. You will also need to run endless-ca-trust-user
+ to add the certificate to the user's NSS database for chromium and
+ chrome. The /etc/profile.d/endless-ca-trust-user.sh profile script does
+ this automatically at login.

@@ -1,1 +1,2 @@
+etc/profile.d/endless-ca-trust-user.sh
 usr/share/ca-certificates/endless/
