@@ -80,23 +80,19 @@ $(ALL_KEYRINGS):
 
 # Endless CA certificate for internal services
 # https://phabricator.endlessm.com/w/sysadmin/ssl-ca/
+#
+# Install a copy in both $(pkgdatadir) and $(datadir)/ca-certificates.
+# It would be nice if the one in ca-certificates could be a symlink, but
+# ca-certificates doesn't suppor that.
+cacertsdir = $(datadir)/ca-certificates/endless
 dist_pkgdata_DATA = keys/endless-ca.crt
+dist_cacerts_DATA = keys/endless-ca.crt
 dist_bin_SCRIPTS = \
 	scripts/endless-ca-trust-system \
 	scripts/endless-ca-trust-user \
 	$(NULL)
 profiledir = $(sysconfdir)/profile.d
 dist_profile_DATA = profile/endless-ca-trust-user.sh
-
-# Symlink in system trusted CA certs directory
-cacertsdir = $(datadir)/ca-certificates/endless
-install-data-local:
-	$(MKDIR_P) $(DESTDIR)$(cacertsdir)
-	$(LN_S) -fr $(DESTDIR)$(pkgdatadir)/endless-ca.crt \
-	  $(DESTDIR)$(cacertsdir)/endless-ca.crt
-
-uninstall-local:
-	rm -f $(DESTDIR)$(cacertsdir)/endless-ca.crt
 
 CLEANFILES = $(ALL_KEYRINGS)
 clean-local:
