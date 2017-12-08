@@ -11,7 +11,7 @@ if [ "$1" = "configure" ]; then
     # Add the CA cert to the configuration file if there's no existing
     # declaration
     if [ -f "$CONF_FILE" ]; then
-        if grep -q "^!\?${CA_CONF}$" "$CONF_FILE"; then
+        if ! grep -q "^!\?${CA_CONF}$" "$CONF_FILE"; then
             cp "$CONF_FILE" "$CONF_FILE_NEW"
             echo "$CA_CONF" >> "$CONF_FILE_NEW"
             mv -f "$CONF_FILE" "$CONF_FILE_OLD"
