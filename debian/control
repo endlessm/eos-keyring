@@ -29,6 +29,14 @@ Description: GnuPG keys for EOS developrs
  This package contains the EOS image signing keys. It was previously
  named eos-dev-keyring.
 
+Package: eos-infra-keyring
+Architecture: all
+Depends: gpgv, ${misc:Depends}
+Recommends: gnupg
+Description: GnuPG keys for Endless infrastucture repository
+ This package contains the Endless infrastructure repository signing
+ key. It's only useful on Endless servers.
+
 Package: endless-ca-cert
 Architecture: all
 # Newer dpkg required for activate-noawait support per deb-triggers(5)
