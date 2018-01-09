@@ -57,6 +57,16 @@ $(CODECS_KEYRING): $(CODECS_KEYS)
 ALL_KEYRINGS += $(CODECS_KEYRING)
 ALL_KEYS += $(CODECS_KEYS)
 
+# Debian archive keyring for Endless infrastructure packages
+# http://obs-master.endlessm-sf.com:82/shared/infra/
+INFRA_KEYRING = eos-infra-archive-keyring.gpg
+INFRA_KEYS = \
+	keys/signing/EIASK1.pub \
+	$(NULL)
+$(INFRA_KEYRING): $(INFRA_KEYS)
+ALL_KEYRINGS += $(INFRA_KEYRING)
+ALL_KEYS += $(INFRA_KEYS)
+
 EXTRA_DIST = $(ALL_KEYS)
 
 keyringdir = $(datadir)/keyrings
@@ -66,7 +76,7 @@ ostree_keyringdir = $(datadir)/ostree/trusted.gpg.d
 ostree_keyring_DATA = $(OSTREE_KEYRING) $(FLATPAK_KEYRING)
 
 archive_keyringdir = $(sysconfdir)/apt/trusted.gpg.d
-archive_keyring_DATA = $(ARCHIVE_KEYRING)
+archive_keyring_DATA = $(ARCHIVE_KEYRING) $(INFRA_KEYRING)
 
 $(ALL_KEYRINGS):
 	$(MKDIR_P) -m700 gnupg
