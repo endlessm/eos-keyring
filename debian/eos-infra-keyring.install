@@ -1,0 +1,2 @@
+etc/apt/trusted.gpg.d/eos-infra-archive-keyring.gpg
+usr/share/keyrings/eos-infra-archive-keyring.gpg
