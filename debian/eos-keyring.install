@@ -1,4 +1,4 @@
-etc/apt/trusted.gpg.d
+etc/apt/trusted.gpg.d/eos-archive-keyring.gpg
 usr/bin/endless-ca-trust-system
 usr/bin/endless-ca-trust-user
 usr/share/eos-keyring/endless-ca.crt
