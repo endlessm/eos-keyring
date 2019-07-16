@@ -11,3 +11,4 @@ configure
 gnupg/
 install-sh
 missing
+test-config.sh
