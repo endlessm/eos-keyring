@@ -105,10 +105,29 @@ dist_bin_SCRIPTS = \
 profiledir = $(sysconfdir)/profile.d
 dist_profile_DATA = profile/endless-ca-trust-user.sh
 
-CLEANFILES = $(ALL_KEYRINGS)
+# Configuration for test scripts
+TEST_CONFIG = test-config.sh
+check_DATA = $(TEST_CONFIG)
+dist_noinst_DATA = $(TEST_CONFIG).in
+subst_test_config = sed \
+	-e 's,%srcdir%,$(srcdir),' \
+	-e 's,%abs_srcdir%,$(abs_srcdir),' \
+	-e 's,%builddir%,$(builddir),' \
+	-e 's,%abs_builddir%,$(abs_builddir),' \
+	-e 's,%GPG%,$(GPG),' \
+	-e 's,%ALL_KEYRINGS%,$(ALL_KEYRINGS),' \
+	-e 's,%ALL_KEYS%,$(ALL_KEYS),' \
+	$(NULL)
+$(TEST_CONFIG): $(TEST_CONFIG).in
+	$(AM_V_GEN)$(subst_test_config) $^ > $@.tmp && mv -f $@.tmp $@
+
+CLEANFILES = $(ALL_KEYRINGS) $(TEST_CONFIG)
 clean-local:
-	rm -f *.gpg~ *.gpg.tmp *.gpg.tmp~
+	rm -f *.gpg~ *.gpg.tmp *.gpg.tmp~ $(TEST_CONFIG).tmp
 	rm -rf gnupg
+
+# Set path to test-config.sh so test scripts can find it
+AM_TESTS_ENVIRONMENT = TEST_CONFIG='$(abs_builddir)/$(TEST_CONFIG)'
 
 check-local: $(ALL_KEYRINGS)
 	rm -rf gnupg
