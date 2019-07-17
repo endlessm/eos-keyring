@@ -126,19 +126,15 @@ clean-local:
 	rm -f *.gpg~ *.gpg.tmp *.gpg.tmp~ $(TEST_CONFIG).tmp
 	rm -rf gnupg
 
+# Test scripts
+dist_check_SCRIPTS = \
+	test-import \
+	$(NULL)
+
+TESTS = $(dist_check_SCRIPTS)
+
 # Set path to test-config.sh so test scripts can find it
 AM_TESTS_ENVIRONMENT = TEST_CONFIG='$(abs_builddir)/$(TEST_CONFIG)'
 
-check-local: $(ALL_KEYRINGS)
-	rm -rf gnupg
-	$(MKDIR_P) -m700 gnupg
-	keyrings='$^'; \
-	for keyring in $$keyrings; do \
-	  $(GPG) --homedir gnupg --import $$keyring || exit 1; \
-	done
-	fingerprints=`$(GPG) --homedir gnupg --list-keys --with-colons \
-	  --with-fingerprint | grep fpr | awk -F ':' '{print $$10}'`; \
-	for fpr in $$fingerprints; do \
-	  echo "$$fpr:6:" | $(GPG) --homedir gnupg --import-ownertrust; \
-	done
-	$(GPG) --homedir gnupg --check-trustdb
+# Configure tests to use TAP protocol
+LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/tap-driver.sh
