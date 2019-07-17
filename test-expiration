@@ -45,14 +45,19 @@ for keyring in "${ALL_KEYRINGS[@]}"; do
 
         # Compare to the minimum expiration date. A non-existent
         # expiration means it never expires.
-        if [ -z "${expiration}" ] || \
-            [ ${expiration} -ge ${min_expire_date} ]
-        then
-            echo "ok ${keyring} ${key_type} key ${key_id}"
+        if [ -z "${expiration}" ]; then
+            echo "ok ${keyring} ${key_type} key ${key_id} does not expire"
         else
-            # FIXME: Mark failures with TODO so that they become XFAIL
-            # until all keys are updated to meet the 5 year policy
-            echo "not ok ${keyring} ${key_type} key ${key_id} # TODO update key expiration"
+            expire_date=$(date --utc --date="@${expiration}")
+            if [ ${expiration} -ge ${min_expire_date} ]; then
+                echo "ok ${keyring} ${key_type} key ${key_id} expires" \
+                    "${expire_date}"
+            else
+                # FIXME: Mark failures with TODO so that they become XFAIL
+                # until all keys are updated to meet the 5 year policy
+                echo "not ok ${keyring} ${key_type} key ${key_id} expires" \
+                    "${expire_date} # TODO update key expiration"
+            fi
         fi
     done <<< "${listing}"
 done
