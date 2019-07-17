@@ -106,6 +106,7 @@ clean-local:
 
 # Test scripts
 dist_check_SCRIPTS = \
+	test-expiration \
 	test-import \
 	$(NULL)
 
