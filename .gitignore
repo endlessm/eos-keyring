@@ -3,11 +3,15 @@
 *~
 *.gpg
 *.gpg.tmp
+*.trs
 Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache/
 config.status
 configure
+gnupg/
 install-sh
 missing
+test-config.sh
+test-driver

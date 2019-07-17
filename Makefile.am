@@ -105,21 +105,37 @@ dist_bin_SCRIPTS = \
 profiledir = $(sysconfdir)/profile.d
 dist_profile_DATA = profile/endless-ca-trust-user.sh
 
-CLEANFILES = $(ALL_KEYRINGS)
+# Configuration for test scripts
+TEST_CONFIG = test-config.sh
+check_DATA = $(TEST_CONFIG)
+dist_noinst_DATA = $(TEST_CONFIG).in
+subst_test_config = sed \
+	-e 's,%srcdir%,$(srcdir),' \
+	-e 's,%abs_srcdir%,$(abs_srcdir),' \
+	-e 's,%builddir%,$(builddir),' \
+	-e 's,%abs_builddir%,$(abs_builddir),' \
+	-e 's,%GPG%,$(GPG),' \
+	-e 's,%ALL_KEYRINGS%,$(ALL_KEYRINGS),' \
+	-e 's,%ALL_KEYS%,$(ALL_KEYS),' \
+	$(NULL)
+$(TEST_CONFIG): $(TEST_CONFIG).in
+	$(AM_V_GEN)$(subst_test_config) $^ > $@.tmp && mv -f $@.tmp $@
+
+CLEANFILES = $(ALL_KEYRINGS) $(TEST_CONFIG)
 clean-local:
-	rm -f *.gpg~ *.gpg.tmp *.gpg.tmp~
+	rm -f *.gpg~ *.gpg.tmp *.gpg.tmp~ $(TEST_CONFIG).tmp
 	rm -rf gnupg
 
-check-local: $(ALL_KEYRINGS)
-	rm -rf gnupg
-	$(MKDIR_P) -m700 gnupg
-	keyrings='$^'; \
-	for keyring in $$keyrings; do \
-	  $(GPG) --homedir gnupg --import $$keyring || exit 1; \
-	done
-	fingerprints=`$(GPG) --homedir gnupg --list-keys --with-colons \
-	  --with-fingerprint | grep fpr | awk -F ':' '{print $$10}'`; \
-	for fpr in $$fingerprints; do \
-	  echo "$$fpr:6:" | $(GPG) --homedir gnupg --import-ownertrust; \
-	done
-	$(GPG) --homedir gnupg --check-trustdb
+# Test scripts
+dist_check_SCRIPTS = \
+	test-expiration \
+	test-import \
+	$(NULL)
+
+TESTS = $(dist_check_SCRIPTS)
+
+# Set path to test-config.sh so test scripts can find it
+AM_TESTS_ENVIRONMENT = TEST_CONFIG='$(abs_builddir)/$(TEST_CONFIG)'
+
+# Configure tests to use TAP protocol
+LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/tap-driver.sh
