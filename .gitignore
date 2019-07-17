@@ -2,6 +2,7 @@
 *.swp
 *~
 *.gpg
+*.trs
 Makefile
 Makefile.in
 aclocal.m4
@@ -12,3 +13,4 @@ gnupg/
 install-sh
 missing
 test-config.sh
+test-driver
