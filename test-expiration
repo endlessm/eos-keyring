@@ -48,7 +48,12 @@ for keyring in "${ALL_KEYRINGS[@]}"; do
         if [ -z "${expiration}" ]; then
             echo "ok ${keyring} ${key_type} key ${key_id} does not expire"
         else
-            expire_date=$(date --utc --date="@${expiration}")
+            # On 32 bit systems, `date` may return EINVAL for an
+            # expiration date beyond 2039.
+            #
+            # http://git.savannah.gnu.org/cgit/coreutils.git/tree/README#n108
+            expire_date=$(date --utc --date="@${expiration}" 2>/dev/null || \
+                echo "${expiration} seconds since the epoch")
             if [ ${expiration} -ge ${min_expire_date} ]; then
                 echo "ok ${keyring} ${key_type} key ${key_id} expires" \
                     "${expire_date}"
