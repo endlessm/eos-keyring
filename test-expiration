@@ -5,11 +5,25 @@ set -euxo pipefail
 TEST_CONFIG=${TEST_CONFIG:-./test-config.sh}
 . "$TEST_CONFIG"
 
+# The --show-keys option is only available on recent GPG2. Use
+# --list-keys with --keyring and various options instead.
+#
+# FIXME: Use --show-keys again when gnupg 2.2.9 is available everywhere
+# this is used.
+show_keys() {
+    local keyring=${1:?No keyring supplied}
+
+    # Use the list options enabled with --show-keys.
+    # --fixed-list-mode makes GPG1 dump timestamps.
+    ${GPG} --list-keys --fingerprint --with-colons --fixed-list-mode \
+        --list-options show-unusable-uids,show-unusable-subkeys \
+        --no-default-keyring --keyring "${keyring}"
+}
+
 # We run a test per primary and sub key, so first count how many we have
 total_keys=0
 for keyring in "${ALL_KEYRINGS[@]}"; do
-    num_keys=$(${GPG} --show-keys --with-colons "${builddir}/${keyring}" | \
-        grep -c -E '^(pub|sub):')
+    num_keys=$(show_keys "${builddir}/${keyring}" | grep -c -E '^(pub|sub):')
     let total_keys+=num_keys
 done
 
@@ -25,7 +39,7 @@ min_expire_date=$((now + min_expire_time))
 #
 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=blob_plain;f=doc/DETAILS
 for keyring in "${ALL_KEYRINGS[@]}"; do
-    listing=$(${GPG} --show-keys --with-colons "${builddir}/${keyring}")
+    listing=$(show_keys "${builddir}/${keyring}")
     while IFS=: read -a fields; do
         # Only look for pub and sub records
         key_type=${fields[0]}
