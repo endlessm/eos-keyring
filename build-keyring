@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -euo pipefail
+
+GPG=${GPG:-gpg}
+
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 KEYRING KEY..." >&2
+    exit 1
+fi
+
+KEYRING=$1
+shift
+
+# Setup temporary GPG homedir
+gpghome=
+cleanup_gpghome() {
+    if [ -d "${gpghome}" ]; then
+        gpg-connect-agent --homedir "${gpghome}" killagent /bye >/dev/null || :
+        rm -rf "${gpghome}"
+    fi
+}
+gpghome=$(mktemp -d gpghome-XXXXXXXX)
+trap cleanup_gpghome EXIT
+export GNUPGHOME=${gpghome}
+
+# Import keys
+for key in "$@"; do
+    ${GPG} --batch --quiet --import "${key}"
+done
+
+# Export all the keys to the keyring
+${GPG} --batch --quiet --export --output "${KEYRING}"
