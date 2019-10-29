@@ -72,10 +72,8 @@ for keyring in "${ALL_KEYRINGS[@]}"; do
                 echo "ok ${keyring} ${key_type} key ${key_id} expires" \
                     "${expire_date}"
             else
-                # FIXME: Mark failures with TODO so that they become XFAIL
-                # until all keys are updated to meet the 5 year policy
                 echo "not ok ${keyring} ${key_type} key ${key_id} expires" \
-                    "${expire_date} # TODO update key expiration"
+                    "${expire_date}"
             fi
         fi
     done <<< "${listing}"
