@@ -10,7 +10,7 @@ aclocal.m4
 autom4te.cache/
 config.status
 configure
-gnupg/
+gpghome-*/
 install-sh
 missing
 test-config.sh

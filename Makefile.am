@@ -80,14 +80,7 @@ archive_keyringdir = $(sysconfdir)/apt/trusted.gpg.d
 archive_keyring_DATA = $(ARCHIVE_KEYRING) $(INFRA_KEYRING)
 
 $(ALL_KEYRINGS):
-	$(MKDIR_P) -m700 gnupg
-	keys='$^'; \
-	for key in $$keys; do \
-	  $(GPG) --homedir gnupg --no-default-keyring \
-	    --keyring $(builddir)/$@.tmp --import $$key || exit 1; \
-	done
-	$(GPG) --homedir gnupg --no-default-keyring \
-	  --keyring $(builddir)/$@.tmp --export > $(builddir)/$@
+	$(AM_V_GEN)GPG='$(GPG)' $(srcdir)/build-keyring $@ $^
 
 # Endless CA certificate for internal services
 # https://phabricator.endlessm.com/w/sysadmin/ssl-ca/
@@ -125,6 +118,11 @@ CLEANFILES = $(ALL_KEYRINGS) $(TEST_CONFIG)
 clean-local:
 	rm -f *.gpg~ *.gpg.tmp *.gpg.tmp~ $(TEST_CONFIG).tmp
 	rm -rf gnupg
+
+# Build scripts
+dist_noinst_SCRIPTS = \
+	build-keyring \
+	$(NULL)
 
 # Test scripts
 dist_check_SCRIPTS = \
