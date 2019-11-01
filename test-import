@@ -11,8 +11,15 @@ num_tests=$((num_keyrings + 1))
 echo "1..${num_tests}"
 
 # Setup temporary GPG homedir
+gpghome=
+cleanup_gpghome() {
+    if [ -d "${gpghome}" ]; then
+        gpg-connect-agent --homedir "${gpghome}" killagent /bye >/dev/null || :
+        rm -rf "${gpghome}"
+    fi
+}
 gpghome=$(mktemp -d -p "${builddir}" gpghome-XXXXXXXX)
-trap "rm -rf \"${gpghome}\"" EXIT
+trap cleanup_gpghome EXIT
 export GNUPGHOME=${gpghome}
 
 # Import keys
