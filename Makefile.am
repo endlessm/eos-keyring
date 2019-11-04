@@ -67,6 +67,15 @@ $(INFRA_KEYRING): $(INFRA_KEYS)
 ALL_KEYRINGS += $(INFRA_KEYRING)
 ALL_KEYS += $(INFRA_KEYS)
 
+# Endless public archive keyring for https://sources.endlessm.com/debian/
+PUBARCHIVE_KEYRING = eos-pub-archive-keyring.gpg
+PUBARCHIVE_KEYS = \
+	keys/signing/EPASK1.pub \
+	$(NULL)
+$(PUBARCHIVE_KEYRING): $(PUBARCHIVE_KEYS)
+ALL_KEYRINGS += $(PUBARCHIVE_KEYRING)
+ALL_KEYS += $(PUBARCHIVE_KEYS)
+
 EXTRA_DIST = $(ALL_KEYS)
 
 keyringdir = $(datadir)/keyrings
