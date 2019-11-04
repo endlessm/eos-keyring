@@ -1,5 +1,6 @@
 INST_KEYRINGS =
 INST_KEYS =
+dist_noinst_DATA =
 
 MASTER_KEYRING = eos-master-keyring.gpg
 MASTER_KEYS = \
@@ -122,10 +123,16 @@ dist_bin_SCRIPTS = \
 profiledir = $(sysconfdir)/profile.d
 dist_profile_DATA = profile/endless-ca-trust-user.sh
 
+# Endless UEFI secure boot CA certificate
+# https://phabricator.endlessm.com/w/software/secure_boot/
+ENDLESS_EFI_CA_CERT = keys/efi/endless-efi-ca.crt
+ALL_X509_CERTS += $(ENDLESS_EFI_CA_CERT)
+dist_noinst_DATA += $(ENDLESS_EFI_CA_CERT)
+
 # Configuration for test scripts
 TEST_CONFIG = test-config.sh
 check_DATA = $(TEST_CONFIG)
-dist_noinst_DATA = $(TEST_CONFIG).in
+dist_noinst_DATA += $(TEST_CONFIG).in
 subst_test_config = sed \
 	-e 's,%srcdir%,$(srcdir),' \
 	-e 's,%abs_srcdir%,$(abs_srcdir),' \
