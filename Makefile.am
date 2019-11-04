@@ -101,6 +101,9 @@ archive_keyring_DATA = $(ARCHIVE_KEYRING) $(INFRA_KEYRING)
 $(ALL_KEYRINGS):
 	$(AM_V_GEN)GPG='$(GPG)' $(srcdir)/build-keyring $@ $^
 
+# X.509 certificates
+ALL_X509_CERTS =
+
 # Endless CA certificate for internal services
 # https://phabricator.endlessm.com/w/sysadmin/ssl-ca/
 #
@@ -108,6 +111,7 @@ $(ALL_KEYRINGS):
 # It would be nice if the one in ca-certificates could be a symlink, but
 # ca-certificates doesn't support that.
 ENDLESS_CA_CERT = keys/tls/endless-ca.crt
+ALL_X509_CERTS += $(ENDLESS_CA_CERT)
 cacertsdir = $(datadir)/ca-certificates/endless
 dist_pkgdata_DATA = $(ENDLESS_CA_CERT)
 dist_cacerts_DATA = $(ENDLESS_CA_CERT)
@@ -128,8 +132,10 @@ subst_test_config = sed \
 	-e 's,%builddir%,$(builddir),' \
 	-e 's,%abs_builddir%,$(abs_builddir),' \
 	-e 's,%GPG%,$(GPG),' \
+	-e 's,%OPENSSL%,$(OPENSSL),' \
 	-e 's,%ALL_KEYRINGS%,$(ALL_KEYRINGS),' \
 	-e 's,%ALL_KEYS%,$(ALL_KEYS),' \
+	-e 's,%ALL_X509_CERTS%,$(ALL_X509_CERTS),' \
 	$(NULL)
 $(TEST_CONFIG): $(TEST_CONFIG).in Makefile
 	$(AM_V_GEN)$(subst_test_config) $< > $@.tmp && mv -f $@.tmp $@
@@ -148,6 +154,7 @@ dist_noinst_SCRIPTS = \
 dist_check_SCRIPTS = \
 	test-expiration \
 	test-import \
+	test-x509-expiration \
 	$(NULL)
 
 TESTS = $(dist_check_SCRIPTS)
