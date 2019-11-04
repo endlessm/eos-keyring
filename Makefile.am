@@ -106,10 +106,11 @@ $(ALL_KEYRINGS):
 #
 # Install a copy in both $(pkgdatadir) and $(datadir)/ca-certificates.
 # It would be nice if the one in ca-certificates could be a symlink, but
-# ca-certificates doesn't suppor that.
+# ca-certificates doesn't support that.
+ENDLESS_CA_CERT = keys/tls/endless-ca.crt
 cacertsdir = $(datadir)/ca-certificates/endless
-dist_pkgdata_DATA = keys/endless-ca.crt
-dist_cacerts_DATA = keys/endless-ca.crt
+dist_pkgdata_DATA = $(ENDLESS_CA_CERT)
+dist_cacerts_DATA = $(ENDLESS_CA_CERT)
 dist_bin_SCRIPTS = \
 	scripts/endless-ca-trust-system \
 	scripts/endless-ca-trust-user \
