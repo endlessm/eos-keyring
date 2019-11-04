@@ -131,8 +131,8 @@ subst_test_config = sed \
 	-e 's,%ALL_KEYRINGS%,$(ALL_KEYRINGS),' \
 	-e 's,%ALL_KEYS%,$(ALL_KEYS),' \
 	$(NULL)
-$(TEST_CONFIG): $(TEST_CONFIG).in
-	$(AM_V_GEN)$(subst_test_config) $^ > $@.tmp && mv -f $@.tmp $@
+$(TEST_CONFIG): $(TEST_CONFIG).in Makefile
+	$(AM_V_GEN)$(subst_test_config) $< > $@.tmp && mv -f $@.tmp $@
 
 CLEANFILES = $(ALL_KEYRINGS) $(TEST_CONFIG)
 clean-local:
