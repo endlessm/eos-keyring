@@ -5,7 +5,7 @@ set -euxo pipefail
 TEST_CONFIG=${TEST_CONFIG:-./test-config.sh}
 . "$TEST_CONFIG"
 
-num_keyrings=${#ALL_KEYRINGS[*]}
+num_keyrings=${#TEST_KEYRINGS[*]}
 num_tests=$((num_keyrings + 1))
 
 echo "1..${num_tests}"
@@ -23,7 +23,7 @@ trap cleanup_gpghome EXIT
 export GNUPGHOME=${gpghome}
 
 # Import keys
-for keyring in "${ALL_KEYRINGS[@]}"; do
+for keyring in "${TEST_KEYRINGS[@]}"; do
     ${GPG} --import "${builddir}/${keyring}"
     echo "ok imported ${keyring}"
 done

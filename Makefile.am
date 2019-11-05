@@ -75,6 +75,10 @@ $(ALL_KEYRINGS):
 cacertsdir = $(datadir)/ca-certificates/endless
 dist_cacerts_DATA = keys/endless-ca.crt
 
+# For eos3.3, we only want to test the ostree and flatpak keyrings.
+# Those are the only keys that are actually critical to deployments.
+TEST_KEYRINGS = $(OSTREE_KEYRING) $(FLATPAK_KEYRING)
+
 # Configuration for test scripts
 TEST_CONFIG = test-config.sh
 check_DATA = $(TEST_CONFIG)
@@ -87,6 +91,7 @@ subst_test_config = sed \
 	-e 's,%GPG%,$(GPG),' \
 	-e 's,%ALL_KEYRINGS%,$(ALL_KEYRINGS),' \
 	-e 's,%ALL_KEYS%,$(ALL_KEYS),' \
+	-e 's,%TEST_KEYRINGS%,$(TEST_KEYRINGS),' \
 	$(NULL)
 $(TEST_CONFIG): $(TEST_CONFIG).in
 	$(AM_V_GEN)$(subst_test_config) $^ > $@.tmp && mv -f $@.tmp $@

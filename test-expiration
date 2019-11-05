@@ -22,7 +22,7 @@ show_keys() {
 
 # We run a test per primary and sub key, so first count how many we have
 total_keys=0
-for keyring in "${ALL_KEYRINGS[@]}"; do
+for keyring in "${TEST_KEYRINGS[@]}"; do
     num_keys=$(show_keys "${builddir}/${keyring}" | grep -c -E '^(pub|sub):')
     let total_keys+=num_keys
 done
@@ -38,7 +38,7 @@ min_expire_date=$((now + min_expire_time))
 # greater than the minimum time.
 #
 # https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=blob_plain;f=doc/DETAILS
-for keyring in "${ALL_KEYRINGS[@]}"; do
+for keyring in "${TEST_KEYRINGS[@]}"; do
     listing=$(show_keys "${builddir}/${keyring}")
     while IFS=: read -a fields; do
         # Only look for pub and sub records
