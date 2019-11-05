@@ -1,0 +1,11 @@
+# Text conversion algorithms for keys. When defined in the git
+# configuration, they will be used to show textual diffs. To disable,
+# pass --no-textconv to git diff.
+
+# GPG key listing. To define, run
+# git config [--global] diff.gpg-keys.textconv 'gpg --show-keys'
+*.pub diff=gpg-keys
+
+# OpenSSL X.509 listing. To define, run
+# git config [--global] diff.openssl-x509.textconv 'openssl x509 --noout --text --in'
+*.crt diff=openssl-x509

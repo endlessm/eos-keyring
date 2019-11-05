@@ -12,7 +12,6 @@ ALL_KEYS += $(MASTER_KEYS)
 
 OSTREE_KEYRING = eos-ostree-keyring.gpg
 OSTREE_KEYS = \
-	keys/signing/ECOLSK1.pub \
 	keys/signing/EOSK1.pub \
 	$(NULL)
 $(OSTREE_KEYRING): $(OSTREE_KEYS)
