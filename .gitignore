@@ -2,11 +2,15 @@
 *.swp
 *~
 *.gpg
+*.trs
 Makefile
 Makefile.in
 aclocal.m4
 autom4te.cache/
 config.status
 configure
+gpghome-*/
 install-sh
 missing
+test-config.sh
+test-driver

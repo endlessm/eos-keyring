@@ -1,0 +1,80 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+TEST_CONFIG=${TEST_CONFIG:-./test-config.sh}
+. "$TEST_CONFIG"
+
+# The --show-keys option is only available on recent GPG2. Use
+# --list-keys with --keyring and various options instead.
+#
+# FIXME: Use --show-keys again when gnupg 2.2.9 is available everywhere
+# this is used.
+show_keys() {
+    local keyring=${1:?No keyring supplied}
+
+    # Use the list options enabled with --show-keys.
+    # --fixed-list-mode makes GPG1 dump timestamps.
+    ${GPG} --list-keys --fingerprint --with-colons --fixed-list-mode \
+        --list-options show-unusable-uids,show-unusable-subkeys \
+        --no-default-keyring --keyring "${keyring}"
+}
+
+# We run a test per primary and sub key, so first count how many we have
+total_keys=0
+for keyring in "${TEST_KEYRINGS[@]}"; do
+    num_keys=$(show_keys "${builddir}/${keyring}" | grep -c -E '^(pub|sub):')
+    let total_keys+=num_keys
+done
+
+echo "1..${total_keys}"
+
+# All keys should expire no less than 5 years from now
+min_expire_time=$((60 * 60 * 24 * 365 * 5))
+now=$(date +%s)
+min_expire_date=$((now + min_expire_time))
+
+# Find the expiration for each key in the keyring and make sure it's
+# greater than the minimum time.
+#
+# https://git.gnupg.org/cgi-bin/gitweb.cgi?p=gnupg.git;a=blob_plain;f=doc/DETAILS
+for keyring in "${TEST_KEYRINGS[@]}"; do
+    listing=$(show_keys "${builddir}/${keyring}")
+    while IFS=: read -a fields; do
+        # Only look for pub and sub records
+        key_type=${fields[0]}
+        case "${key_type}" in
+            pub|sub)
+                ;;
+            *)
+                continue
+                ;;
+        esac
+
+        # Key ID is in the 5th field
+        key_id=${fields[4]}
+
+        # Expiration is in the 7th field
+        expiration=${fields[6]}
+
+        # Compare to the minimum expiration date. A non-existent
+        # expiration means it never expires.
+        if [ -z "${expiration}" ]; then
+            echo "ok ${keyring} ${key_type} key ${key_id} does not expire"
+        else
+            # On 32 bit systems, `date` may return EINVAL for an
+            # expiration date beyond 2039.
+            #
+            # http://git.savannah.gnu.org/cgit/coreutils.git/tree/README#n108
+            expire_date=$(date --utc --date="@${expiration}" 2>/dev/null || \
+                echo "${expiration} seconds since the epoch")
+            if [ ${expiration} -ge ${min_expire_date} ]; then
+                echo "ok ${keyring} ${key_type} key ${key_id} expires" \
+                    "${expire_date}"
+            else
+                echo "not ok ${keyring} ${key_type} key ${key_id} expires" \
+                    "${expire_date}"
+            fi
+        fi
+    done <<< "${listing}"
+done

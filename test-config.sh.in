@@ -1,0 +1,10 @@
+# Configuration for bash test scripts
+
+srcdir=%srcdir%
+abs_srcdir=%abs_srcdir%
+builddir=%builddir%
+abs_builddir=%abs_builddir%
+GPG="%GPG%"
+ALL_KEYRINGS=(%ALL_KEYRINGS%)
+ALL_KEYS=(%ALL_KEYS%)
+TEST_KEYRINGS=(%TEST_KEYRINGS%)

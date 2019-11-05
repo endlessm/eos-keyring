@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -euxo pipefail
+
+TEST_CONFIG=${TEST_CONFIG:-./test-config.sh}
+. "$TEST_CONFIG"
+
+num_keyrings=${#TEST_KEYRINGS[*]}
+num_tests=$((num_keyrings + 1))
+
+echo "1..${num_tests}"
+
+# Setup temporary GPG homedir
+gpghome=
+cleanup_gpghome() {
+    if [ -d "${gpghome}" ]; then
+        gpg-connect-agent --homedir "${gpghome}" killagent /bye >/dev/null || :
+        rm -rf "${gpghome}"
+    fi
+}
+gpghome=$(mktemp -d -p "${builddir}" gpghome-XXXXXXXX)
+trap cleanup_gpghome EXIT
+export GNUPGHOME=${gpghome}
+
+# Import keys
+for keyring in "${TEST_KEYRINGS[@]}"; do
+    ${GPG} --import "${builddir}/${keyring}"
+    echo "ok imported ${keyring}"
+done
+
+# Create trust entries for each and check trustdb
+fingerprints=$(${GPG} --list-keys --with-colons --with-fingerprint | \
+    awk -F ':' '{if ($1 == "fpr") print $10}')
+for fpr in $fingerprints; do \
+    echo "$fpr:6:" | ${GPG} --import-ownertrust
+done
+${GPG} --check-trustdb
+echo "ok check-trustdb"

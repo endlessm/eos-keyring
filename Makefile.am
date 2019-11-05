@@ -12,7 +12,6 @@ ALL_KEYS += $(MASTER_KEYS)
 
 OSTREE_KEYRING = eos-ostree-keyring.gpg
 OSTREE_KEYS = \
-	keys/signing/ECOLSK1.pub \
 	keys/signing/EOSK1.pub \
 	$(NULL)
 $(OSTREE_KEYRING): $(OSTREE_KEYS)
@@ -69,35 +68,54 @@ archive_keyringdir = $(sysconfdir)/apt/trusted.gpg.d
 archive_keyring_DATA = $(ARCHIVE_KEYRING)
 
 $(ALL_KEYRINGS):
-	$(MKDIR_P) -m700 gnupg
-	keys='$^'; \
-	for key in $$keys; do \
-	  $(GPG) --homedir gnupg --no-default-keyring \
-	    --keyring $(builddir)/$@.tmp --import $$key || exit 1; \
-	done
-	$(GPG) --homedir gnupg --no-default-keyring \
-	  --keyring $(builddir)/$@.tmp --export > $(builddir)/$@
+	$(AM_V_GEN)GPG='$(GPG)' $(srcdir)/build-keyring $@ $^
 
 # Endless CA certificate for internal services
 # https://phabricator.endlessm.com/w/sysadmin/ssl-ca/
 cacertsdir = $(datadir)/ca-certificates/endless
 dist_cacerts_DATA = keys/endless-ca.crt
 
-CLEANFILES = $(ALL_KEYRINGS)
+# For eos3.3, we only want to test the ostree and flatpak keyrings.
+# Those are the only keys that are actually critical to deployments.
+TEST_KEYRINGS = $(OSTREE_KEYRING) $(FLATPAK_KEYRING)
+
+# Configuration for test scripts
+TEST_CONFIG = test-config.sh
+check_DATA = $(TEST_CONFIG)
+dist_noinst_DATA = $(TEST_CONFIG).in
+subst_test_config = sed \
+	-e 's,%srcdir%,$(srcdir),' \
+	-e 's,%abs_srcdir%,$(abs_srcdir),' \
+	-e 's,%builddir%,$(builddir),' \
+	-e 's,%abs_builddir%,$(abs_builddir),' \
+	-e 's,%GPG%,$(GPG),' \
+	-e 's,%ALL_KEYRINGS%,$(ALL_KEYRINGS),' \
+	-e 's,%ALL_KEYS%,$(ALL_KEYS),' \
+	-e 's,%TEST_KEYRINGS%,$(TEST_KEYRINGS),' \
+	$(NULL)
+$(TEST_CONFIG): $(TEST_CONFIG).in
+	$(AM_V_GEN)$(subst_test_config) $^ > $@.tmp && mv -f $@.tmp $@
+
+CLEANFILES = $(ALL_KEYRINGS) $(TEST_CONFIG)
 clean-local:
-	rm -f *.gpg~ *.gpg.tmp *.gpg.tmp~
+	rm -f *.gpg~ *.gpg.tmp *.gpg.tmp~ $(TEST_CONFIG).tmp
 	rm -rf gnupg
 
-check-local: $(ALL_KEYRINGS)
-	rm -rf gnupg
-	$(MKDIR_P) -m700 gnupg
-	keyrings='$^'; \
-	for keyring in $$keyrings; do \
-	  $(GPG) --homedir gnupg --import $$keyring || exit 1; \
-	done
-	fingerprints=`$(GPG) --homedir gnupg --list-keys --with-colons \
-	  --with-fingerprint | grep fpr | awk -F ':' '{print $$10}'`; \
-	for fpr in $$fingerprints; do \
-	  echo "$$fpr:6:" | $(GPG) --homedir gnupg --import-ownertrust; \
-	done
-	$(GPG) --homedir gnupg --check-trustdb
+# Build scripts
+dist_noinst_SCRIPTS = \
+	build-keyring \
+	$(NULL)
+
+# Test scripts
+dist_check_SCRIPTS = \
+	test-expiration \
+	test-import \
+	$(NULL)
+
+TESTS = $(dist_check_SCRIPTS)
+
+# Set path to test-config.sh so test scripts can find it
+AM_TESTS_ENVIRONMENT = TEST_CONFIG='$(abs_builddir)/$(TEST_CONFIG)'
+
+# Configure tests to use TAP protocol
+LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) $(top_srcdir)/tap-driver.sh
