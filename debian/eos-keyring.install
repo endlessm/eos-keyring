@@ -7,4 +7,5 @@ usr/share/keyrings/eos-codecs-keyring.gpg
 usr/share/keyrings/eos-flatpak-keyring.gpg
 usr/share/keyrings/eos-master-keyring.gpg
 usr/share/keyrings/eos-ostree-keyring.gpg
+usr/share/keyrings/eos-pub-archive-keyring.gpg
 usr/share/ostree/trusted.gpg.d
