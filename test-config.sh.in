@@ -5,5 +5,7 @@ abs_srcdir=%abs_srcdir%
 builddir=%builddir%
 abs_builddir=%abs_builddir%
 GPG="%GPG%"
+OPENSSL="%OPENSSL%"
 ALL_KEYRINGS=(%ALL_KEYRINGS%)
 ALL_KEYS=(%ALL_KEYS%)
+ALL_X509_CERTS=(%ALL_X509_CERTS%)
