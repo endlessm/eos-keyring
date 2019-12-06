@@ -125,7 +125,7 @@ dist_profile_DATA = profile/endless-ca-trust-user.sh
 
 # Endless UEFI secure boot CA certificate
 # https://phabricator.endlessm.com/w/software/secure_boot/
-ENDLESS_EFI_CA_CERT = keys/efi/endless-efi-ca.crt
+ENDLESS_EFI_CA_CERT = keys/efi/Endless-Secure-Boot-CA.crt
 ALL_X509_CERTS += $(ENDLESS_EFI_CA_CERT)
 dist_noinst_DATA += $(ENDLESS_EFI_CA_CERT)
 
