@@ -123,11 +123,17 @@ dist_bin_SCRIPTS = \
 profiledir = $(sysconfdir)/profile.d
 dist_profile_DATA = profile/endless-ca-trust-user.sh
 
-# Endless UEFI secure boot CA certificate
+# Endless UEFI secure boot certificates
 # https://phabricator.endlessm.com/w/software/secure_boot/
-ENDLESS_EFI_CA_CERT = keys/efi/endless-efi-ca.crt
-ALL_X509_CERTS += $(ENDLESS_EFI_CA_CERT)
-dist_noinst_DATA += $(ENDLESS_EFI_CA_CERT)
+ENDLESS_EFI_CERTS = \
+	keys/efi/Endless-Secure-Boot-CA.crt \
+	keys/efi/EOS-PAYG-KEK-CA-2019.crt \
+	keys/efi/EOS-PAYG-UEFI-CA-2019.crt \
+	keys/efi/EOS-PAYG-UEFI-Signing-2019.crt \
+	keys/efi/EOS-UEFI-Signing-2019.crt \
+	$(NULL)
+ALL_X509_CERTS += $(ENDLESS_EFI_CERTS)
+dist_noinst_DATA += $(ENDLESS_EFI_CERTS)
 
 # Configuration for test scripts
 TEST_CONFIG = test-config.sh
