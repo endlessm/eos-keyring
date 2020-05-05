@@ -49,6 +49,7 @@ CODECS_KEYS = \
 	keys/codecs/ECFAK1.pub \
 	keys/codecs/ECHKAK1.pub \
 	keys/codecs/ECHNDAK1.pub \
+	keys/codecs/ECIAK1.pub \
 	keys/codecs/ECMK1.pub \
 	keys/codecs/ECOAK1.pub \
 	keys/codecs/ECSOLAK1.pub \
