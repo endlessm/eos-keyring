@@ -45,14 +45,14 @@ INST_KEYS += $(ARCHIVE_KEYS)
 
 CODECS_KEYRING = eos-codecs-keyring.gpg
 CODECS_KEYS = \
-	keys/codecs/ECMK1.pub \
 	keys/codecs/ECAK1.pub \
-	keys/codecs/ECOAK1.pub \
-	keys/codecs/ECUAK1.pub \
 	keys/codecs/ECFAK1.pub \
-	keys/codecs/ECHNDAK1.pub \
-	keys/codecs/ECSOLAK1.pub \
 	keys/codecs/ECHKAK1.pub \
+	keys/codecs/ECHNDAK1.pub \
+	keys/codecs/ECMK1.pub \
+	keys/codecs/ECOAK1.pub \
+	keys/codecs/ECSOLAK1.pub \
+	keys/codecs/ECUAK1.pub \
 	$(NULL)
 $(CODECS_KEYRING): $(CODECS_KEYS)
 INST_KEYRINGS += $(CODECS_KEYRING)
