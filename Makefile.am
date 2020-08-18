@@ -128,6 +128,7 @@ dist_profile_DATA = profile/endless-ca-trust-user.sh
 # https://phabricator.endlessm.com/w/software/secure_boot/
 ENDLESS_EFI_CERTS = \
 	keys/efi/Endless-Secure-Boot-CA.crt \
+	keys/efi/EOS-Driver-Signing-2020.crt \
 	keys/efi/EOS-PAYG-KEK-CA-2019.crt \
 	keys/efi/EOS-PAYG-UEFI-CA-2019.crt \
 	keys/efi/EOS-PAYG-UEFI-Signing-2019.crt \
