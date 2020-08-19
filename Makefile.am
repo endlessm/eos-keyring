@@ -132,12 +132,12 @@ ENDLESS_EFI_CERTS = \
 	keys/efi/EOS-PAYG-KEK-CA-2019.crt \
 	keys/efi/EOS-PAYG-UEFI-CA-2019.crt \
 	keys/efi/EOS-PAYG-UEFI-Signing-2019.crt \
-	keys/efi/EOS-UEFI-Signing-2019.crt \
 	keys/efi/EOS-UEFI-Signing-2020.crt \
 	$(NULL)
 ENDLESS_INACTIVE_EFI_CERTS = \
 	keys/efi/inactive/Endless-Secure-Boot-Signer-2016-08-01.crt \
 	keys/efi/inactive/Endless-Secure-Boot-Signer-2017-12-01.crt \
+	keys/efi/inactive/EOS-UEFI-Signing-2019.crt \
 	$(NULL)
 ALL_X509_CERTS += $(ENDLESS_EFI_CERTS)
 dist_noinst_DATA += $(ENDLESS_EFI_CERTS) $(ENDLESS_INACTIVE_EFI_CERTS)
