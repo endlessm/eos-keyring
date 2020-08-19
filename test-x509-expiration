@@ -11,6 +11,15 @@ get_expire_date() {
     ${OPENSSL} x509 -noout -enddate -in "${cert}" | awk -F= '{print $2}'
 }
 
+is_ca_cert() {
+    local cert=${1:?No certificate supplied}
+    local ca
+
+    ca=$(${OPENSSL} x509 -noout -ext basicConstraints -in "${cert}" | \
+        awk -F: '$1 ~ /^\s*CA$/ {print $2}')
+    [ "$ca" = TRUE ]
+}
+
 check_expiration() {
     local cert=${1:?No certificate supplied}
     local seconds=${2:?No minimum expiration seconds supplied}
@@ -22,13 +31,21 @@ check_expiration() {
 total_certs=${#ALL_X509_CERTS[@]}
 echo "1..${total_certs}"
 
-# All certs should expire no less than 5 years from now
-min_expire_seconds=$((60 * 60 * 24 * 365 * 5))
+# All CA certs should expire no less than 5 years from now
+min_ca_expire_seconds=$((60 * 60 * 24 * 365 * 5))
+
+# All non-CA certs should expire no less than 1 year from now
+min_nonca_expire_seconds=$((60 * 60 * 24 * 365 * 1))
 
 # Find the expiration for each cert in the keyring and make sure it's
 # greater than the minimum time.
 for cert in "${ALL_X509_CERTS[@]}"; do
     expire_date=$(get_expire_date "${srcdir}/${cert}")
+    if is_ca_cert "${srcdir}/${cert}"; then
+        min_expire_seconds=${min_ca_expire_seconds}
+    else
+        min_expire_seconds=${min_nonca_expire_seconds}
+    fi
 
     # Compare to the minimum expiration date
     if check_expiration "${srcdir}/${cert}" "${min_expire_seconds}"; then
