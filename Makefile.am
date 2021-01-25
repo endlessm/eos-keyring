@@ -98,7 +98,11 @@ ostree_keyringdir = $(datadir)/ostree/trusted.gpg.d
 ostree_keyring_DATA = $(OSTREE_KEYRING) $(FLATPAK_KEYRING)
 
 archive_keyringdir = $(sysconfdir)/apt/trusted.gpg.d
-archive_keyring_DATA = $(ARCHIVE_KEYRING) $(INFRA_KEYRING)
+archive_keyring_DATA = \
+	$(ARCHIVE_KEYRING) \
+	$(INFRA_KEYRING) \
+	$(PUBARCHIVE_KEYRING) \
+	$(NULL)
 
 $(ALL_KEYRINGS):
 	$(AM_V_GEN)GPG='$(GPG)' $(srcdir)/build-keyring $@ $^
