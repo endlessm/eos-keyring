@@ -116,8 +116,12 @@ ALL_X509_CERTS =
 # Install a copy in both $(pkgdatadir) and $(datadir)/ca-certificates.
 # It would be nice if the one in ca-certificates could be a symlink, but
 # ca-certificates doesn't support that.
+#
+# The intermediate CA certificate is only included for expiration
+# testing.
 ENDLESS_CA_CERT = keys/tls/endless-ca.crt
-ALL_X509_CERTS += $(ENDLESS_CA_CERT)
+ENDLESS_INT_CA_CERT = keys/tls/endless-intermediate-ca.crt
+ALL_X509_CERTS += $(ENDLESS_CA_CERT) $(ENDLESS_INT_CA_CERT)
 cacertsdir = $(datadir)/ca-certificates/endless
 dist_pkgdata_DATA = $(ENDLESS_CA_CERT)
 dist_cacerts_DATA = $(ENDLESS_CA_CERT)
@@ -127,6 +131,7 @@ dist_bin_SCRIPTS = \
 	$(NULL)
 profiledir = $(sysconfdir)/profile.d
 dist_profile_DATA = profile/endless-ca-trust-user.sh
+dist_noinst_DATA += $(ENDLESS_INT_CA_CERT)
 
 # Endless UEFI secure boot certificates
 # https://phabricator.endlessm.com/w/software/secure_boot/
