@@ -1,6 +1,6 @@
 AC_INIT([eos-keyring], [2.0+2014.05.15])
 
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([foreign tar-pax])
 AM_SILENT_RULES([yes])
 
 AC_PROG_MKDIR_P
