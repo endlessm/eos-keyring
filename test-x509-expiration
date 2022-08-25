@@ -16,7 +16,7 @@ is_ca_cert() {
     local ca
 
     ca=$(${OPENSSL} x509 -noout -ext basicConstraints -in "${cert}" | \
-        awk -F: '$1 ~ /^\s*CA$/ {print $2}')
+        awk -F: '$1 ~ /^[[:space:]]*CA$/ {print $2}')
     [ "$ca" = TRUE ]
 }
 
