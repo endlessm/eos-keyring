@@ -30,4 +30,5 @@ for key in "$@"; do
 done
 
 # Export all the keys to the keyring
+rm -f "${KEYRING}"
 ${GPG} --batch --quiet --export --output "${KEYRING}"
