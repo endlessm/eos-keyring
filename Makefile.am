@@ -154,6 +154,18 @@ ENDLESS_INACTIVE_EFI_CERTS = \
 ALL_X509_CERTS += $(ENDLESS_EFI_CERTS)
 dist_noinst_DATA += $(ENDLESS_EFI_CERTS) $(ENDLESS_INACTIVE_EFI_CERTS)
 
+# GlobalSign EV code signing certificate
+CODE_SIGNING_CERT = keys/code-signing/code-ev-2024.crt
+CODE_SIGNING_EXTRA = \
+	keys/code-signing/code-ev-2024.csr \
+	keys/code-signing/globalsign-cs-r45.crt \
+	keys/code-signing/globalsign-ev-cs-r45.crt \
+	keys/code-signing/globalsign-root-r3.crt \
+	keys/code-signing/README.md \
+	$(NULL)
+ALL_X509_CERTS += $(CODE_SIGNING_CERT)
+dist_noinst_DATA += $(CODE_SIGNING_CERT) $(CODE_SIGNING_EXTRA)
+
 # Configuration for test scripts
 TEST_CONFIG = test-config.sh
 check_DATA = $(TEST_CONFIG)

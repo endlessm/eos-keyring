@@ -7,5 +7,9 @@
 *.pub diff=gpg-keys
 
 # OpenSSL X.509 listing. To define, run
-# git config [--global] diff.openssl-x509.textconv 'openssl x509 --noout --text --in'
+# git config [--global] diff.openssl-x509.textconv 'openssl x509 -noout -text -in'
 *.crt diff=openssl-x509
+
+# OpenSSL X.509 CSR listing. To define, run
+# git config [--global] diff.openssl-csr.textconv 'openssl req -noout -text -in'
+*.csr diff=openssl-csr
