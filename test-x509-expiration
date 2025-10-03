@@ -43,7 +43,7 @@ for cert in "${ALL_X509_CERTS[@]}"; do
     cert_basename=${cert##*/}
     expire_date=$(get_expire_date "${srcdir}/${cert}")
     case "${cert_basename}" in
-        code-ev-2024.crt)
+        code-ev-*.crt)
             # GlobalSign EV code signing certificate. This is only valid
             # for 1 year, so warn when less than 30 days to expiration.
             min_expire_seconds=$((60 * 60 * 24 * 30))
