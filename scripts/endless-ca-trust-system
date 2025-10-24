@@ -19,7 +19,7 @@
 
 # Copy the Endless CA certificate to /usr/local/share/ca-certificats. It
 # will be added to the system CA certificates in /etc/ssl/certs after
-# running update-ca-certificates.
+# running update-ca-trust.
 
 CERT_SRC_PATH=/usr/share/eos-keyring/endless-ca.crt
 CERT_DST_PATH=/usr/local/share/ca-certificates/endless-ca.crt
@@ -92,14 +92,9 @@ if ! $DRY_RUN; then
     cp "$CERT_SRC_PATH" "$CERT_DST_PATH"
 fi
 
-echo "Updating system certificates with update-ca-certificates"
+echo "Updating system certificates with update-ca-trust"
 if ! $DRY_RUN; then
-    if $FORCE; then
-        # Call with --fresh so symlinks are rebuilt
-        update-ca-certificates --fresh
-    else
-        update-ca-certificates
-    fi
+    update-ca-trust
 
     # Let the caller know to update their NSS database so
     # chromium/chrome also trust the certificate
