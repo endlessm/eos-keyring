@@ -137,13 +137,11 @@ dist_noinst_DATA += $(ENDLESS_INT_CA_CERT)
 # https://phabricator.endlessm.com/w/software/secure_boot/
 ENDLESS_EFI_CERTS = \
 	keys/efi/Endless-Secure-Boot-CA.crt \
-	keys/efi/EOS-Driver-Signing-2022.crt \
 	keys/efi/EOS-Driver-Signing-2025.crt \
 	keys/efi/EOS-PAYG-KEK-CA-2019.crt \
 	keys/efi/EOS-PAYG-UEFI-CA-2019.crt \
 	keys/efi/EOS-PAYG-UEFI-Signing-2019.crt \
 	keys/efi/EOS-PAYG-UEFI-Signing-2025.crt \
-	keys/efi/EOS-UEFI-Signing-2022.crt \
 	keys/efi/EOS-UEFI-Signing-2025.crt \
 	$(NULL)
 ENDLESS_INACTIVE_EFI_CERTS = \
@@ -153,6 +151,8 @@ ENDLESS_INACTIVE_EFI_CERTS = \
 	keys/efi/inactive/EOS-Driver-Signing-2020.crt \
 	keys/efi/inactive/EOS-UEFI-Signing-2019.crt \
 	keys/efi/inactive/EOS-UEFI-Signing-2020.crt \
+	keys/efi/EOS-Driver-Signing-2022.crt \
+	keys/efi/EOS-UEFI-Signing-2022.crt \
 	$(NULL)
 ALL_X509_CERTS += $(ENDLESS_EFI_CERTS)
 dist_noinst_DATA += $(ENDLESS_EFI_CERTS) $(ENDLESS_INACTIVE_EFI_CERTS)
